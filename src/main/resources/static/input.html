@@ -11,7 +11,7 @@
     <input type="text" placeholder="name" id="name">
     <input type="text" placeholder="description" id="description">
     <input type="text" placeholder="due" id="due">
-    <input type="button" id="submit">
+    <input type="button" id="submit" value="submit">
 
     <script>
         function generateID() {
@@ -57,7 +57,7 @@
             }
         });
 
-        document.getElementById('button').addEventListener('click', async () => {
+        document.getElementById('submit').addEventListener('click', async () => {
             // Data conversion
 
             await fetch({});
