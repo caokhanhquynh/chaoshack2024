@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <table id="table">
+        <tr id="header">
+        </tr>
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+    <input type="button" value="New task" id="newTask">
+
+    <script>
+        function shuffle(inArray) {
+            let outArray = [];
+            while (outArray.length > 0) {
+                let index = Math.floor(Math.random() * outArray.length);
+
+                outArray.push(inArray[index]);
+                inArray.splice(index, 1);
+            }
+            return outArray;
+        }
+
+        const columnInfo = {
+            'name': {
+                header: 'Name',
+                button: false
+            },
+            'description': {
+                header: 'Description',
+                button: false
+            },
+            'due': {
+                header: 'Due date',
+                button: false
+            },
+            'edit': {
+                header: ' ',
+                button: true,
+                handler: event => {
+                    location.replace(`input.html?id=${event.target.name}`);
+                }
+            },
+            'delete': {
+                header: ' ',
+                button: true,
+                handler: async event => {
+                    await fetch({});
+                    reloadTable();
+                }
+            }
+        }
+
+        function reloadTable() {
+            const COLUMNS = shuffle(['name', 'description', 'due', 'edit', 'delete']);
+
+            const table = document.getElementById('table');
+            const tableHeader = document.getElementById('header');
+            const tableBody = document.getElementById('tbody');
+
+            // Clear the table
+            while (tableHeader.firstChild) tableHeader.removeChild(tableHeader.firstChild);
+            while (tableBody.firstChild) tableBody.removeChild(tableBody.firstChild);
+
+            // Assemble the table header
+            COLUMNS.forEach(columnId => {
+                let th = document.createElement('th');
+                th.id = columnId;
+                th.innerText = columnInfo[columnId].header;
+                tableHeader.appendChild(th);
+            })
+
+            fetch({}).then(async response => {
+                // Get the data
+                let data = await response.json(); // Might change
+
+                /* Possibly convert to my own format
+                [
+                    {
+                        id: string,
+                        name: string,
+                        description: string,
+                        due: Date
+                    },
+                    ...
+                ]
+                */
+
+                // Filter out stuff
+                // Probability of being shown is 10% if the item is more than a week out, linearly increasing to 90% if the item is less than a day out
+                let now = new Date();
+                data.filter(row => {
+                    let diff = row.date - now;
+                    let p = -648000000 * diff + 669600000;   // Result of fitting y=mx+b
+                    p = Math.min(Math.max(p, 0.1), 0.9);     // Limit it to be from 0.1 to 0.9
+                    return Math.random() <= p;
+                })
+
+                // Shuffle stuff
+                data = shuffle(data);
+
+                // Put the rows into the table
+                data.forEach(row => {
+                    let tr = document.createElement('tr');
+
+                    COLUMNS.forEach(columnId => {
+                        if (columnInfo[columnId].button) {
+                            let button = document.createElement('input');
+                            button.type = 'button';
+                            button.value = columnInfo[columnId].header;
+                            button.name = row.id;
+                            button.addEventListener('click', columnInfo[columnId].handler);
+                            tr.appendChild(button);
+                        } else {
+                            let td = document.createElement('td');
+                            td.innerText = data[columnId];
+                            tr.appendChild(td);
+                        }
+                    });
+
+                    tableBody.appendChild(tr);
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', reloadTable);
+
+        document.getElementById('newTask').addEventListener('click', () => {
+            location.href = '/input.html'
+        });
+    </script>
+</body>
+
+</html>

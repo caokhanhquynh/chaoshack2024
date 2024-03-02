@@ -1,18 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input</title>
 </head>
+
 <body>
-    <table>
-        <tr>
-            <th>Task Name</th>
-            <th>Task Description</th>
-            <th>Task Due</th>
-        </tr>
-        <div class="tasks"></div>
-    </table>
+    <input type="text" placeholder="name" id="name">
+    <input type="text" placeholder="description" id="description">
+    <input type="text" placeholder="due" id="due">
+    <input type="button" id="submit">
+
+    <script>
+        function generateID() {
+            const CHARS = '1234567890QWERTYUIOPqwertyuiopASDFGHJKLasdfghjklZXCVBNMzxcvbnm+/'
+            let result = '';
+            for (let i = 0; i < 64; i++) {
+                result += CHARS[Math.floor(Math.random() * CHARS.length)];
+            }
+            return result;
+        }
+        let query = location.href.split('?')[1];
+        let params = {};
+        if (query) {
+            let stringParams = query.split('&');
+            stringParams.forEach(str => {
+                let pair = str.split('=');
+                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            });
+        }
+
+        let id;
+        let fetchData;
+        if (Object.keys(params).includes('id')) {
+            id = params['id'];
+            fetchData = true;
+        } else {
+            id = generateID();
+            fetchData = false;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (fetchData) {
+                fetch({}).then(async response => {
+                    const FIELDS = ['name', 'description', 'due']
+                    let data = await response.json();
+
+                    // Conversion
+
+                    FIELDS.forEach(field => {
+                        document.getElementById(field).value = data[field];
+                    })
+                });
+            }
+        });
+
+        document.getElementById('button').addEventListener('click', async () => {
+            // Data conversion
+
+            await fetch({});
+            location.replace('timetable.html')
+        })
+    </script>
 </body>
+
 </html>
