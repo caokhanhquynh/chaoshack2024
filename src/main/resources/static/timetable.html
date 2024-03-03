@@ -3,13 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
     <table id="table">
         <tr id="header">
+            <th><b>Task</b></th>
+            <th><b>Description</b></th>
+            <th><b>Deadline</b></th>
         </tr>
         <tbody id="tbody">
 
@@ -67,8 +69,8 @@
             const tableBody = document.getElementById('tbody');
 
             // Clear the table
-            while (tableHeader.firstChild) tableHeader.removeChild(tableHeader.firstChild);
-            while (tableBody.firstChild) tableBody.removeChild(tableBody.firstChild);
+            // while (tableHeader.firstChild) tableHeader.removeChild(tableHeader.firstChild);
+            // while (tableBody.firstChild) tableBody.removeChild(tableBody.firstChild);
 
             // Assemble the table header
             COLUMNS.forEach(columnId => {
@@ -78,7 +80,7 @@
                 tableHeader.appendChild(th);
             })
 
-            fetch({}).then(async response => {
+            fetch('http://localhost:3000/view').then(async response => {
                 // Get the data
                 let data = await response.json(); // Might change
 
@@ -97,37 +99,61 @@
                 // Filter out stuff
                 // Probability of being shown is 10% if the item is more than a week out, linearly increasing to 90% if the item is less than a day out
                 let now = new Date();
-                data.filter(row => {
-                    let diff = row.date - now;
-                    let p = -648000000 * diff + 669600000;   // Result of fitting y=mx+b
-                    p = Math.min(Math.max(p, 0.1), 0.9);     // Limit it to be from 0.1 to 0.9
-                    return Math.random() <= p;
-                })
+                // data.filter(row => {
+                //     let diff = row.date - now;
+                //     let p = -648000000 * diff + 669600000;   // Result of fitting y=mx+b
+                //     p = Math.min(Math.max(p, 0.1), 0.9);     // Limit it to be from 0.1 to 0.9
+                //     return Math.random() <= p;
+                // })
 
                 // Shuffle stuff
                 data = shuffle(data);
 
                 // Put the rows into the table
-                data.forEach(row => {
-                    let tr = document.createElement('tr');
+data.forEach(row => {
+    let tr = document.createElement('tr');
 
-                    COLUMNS.forEach(columnId => {
-                        if (columnInfo[columnId].button) {
-                            let button = document.createElement('input');
-                            button.type = 'button';
-                            button.value = columnInfo[columnId].header;
-                            button.name = row.id;
-                            button.addEventListener('click', columnInfo[columnId].handler);
-                            tr.appendChild(button);
-                        } else {
-                            let td = document.createElement('td');
-                            td.innerText = data[columnId];
-                            tr.appendChild(td);
-                        }
-                    });
+    COLUMNS.forEach(columnId => {
+        let td = document.createElement('td');
+        if (columnInfo[columnId].button) {
+            let button = document.createElement('input');
+            button.type = 'button';
+            button.value = columnInfo[columnId].header;
+            button.name = row.id;
+            button.addEventListener('click', columnInfo[columnId].handler);
+            td.appendChild(button);
+        } else {
+            // Access the property of row using columnId as the key
+            td.innerText = row[columnId] || '';  // Using || '' to handle undefined values
+        }
+        tr.appendChild(td);
+    });
 
-                    tableBody.appendChild(tr);
-                });
+    tableBody.appendChild(tr);
+});
+
+
+                // Put the rows into the table
+                // data.forEach(row => {
+                //     let tr = document.createElement('tr');
+
+                //     COLUMNS.forEach(columnId => {
+                //         if (columnInfo[columnId].button) {
+                //             let button = document.createElement('input');
+                //             button.type = 'button';
+                //             button.value = columnInfo[columnId].header;
+                //             button.name = row.id;
+                //             button.addEventListener('click', columnInfo[columnId].handler);
+                //             tr.appendChild(button);
+                //         } else {
+                //             let td = document.createElement('td');
+                //             td.innerText = data[columnId];
+                //             tr.appendChild(td);
+                //         }
+                //     });
+
+                //     tableBody.appendChild(tr);
+                // });
             });
         }
 
@@ -136,6 +162,7 @@
         document.getElementById('newTask').addEventListener('click', () => {
             location.href = 'input.html'
         });
+
     </script>
 </body>
 
