@@ -9,6 +9,8 @@
     justify-content: center;
 }
 body {
+    align-items: center;
+    justify-content: center;
     background: linear-gradient(-45deg, #cef32c, #eb950c, #011081, #ff0059);
     background-size: 400% 400%;
     animation: gradient 1s ease infinite;
@@ -26,3 +28,56 @@ body {
       background-position: 0% 50%;
     }
   }
+  @keyframes moveBackground {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+  .background-animation {
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 30%;
+    background-image: url('maxwell1.png');
+    background-size: cover;
+    animation: moveBackground 10s linear infinite; /* Change the duration and animation timing function as needed */
+}
+
+#newTask{
+    background-color: #2f2fe2; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+/* Position 1 */
+.float_1 {
+    float: right;
+}
+
+/* Position 2 */
+.float-right {
+    float: left;
+}
+
+/* Position 3 */
+.float-lg-right {
+    float: right;
+}
+
+/* Position 4 */
+.float-md-left {
+    float: left;
+}
+
+/* Position 5 */
+.float-lg-left {
+    float: left;
+}

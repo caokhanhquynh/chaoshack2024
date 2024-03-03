@@ -10,13 +10,18 @@
 </head>
 
 <body>
+    <h1 class = "title">Chaotic Timetable</h1>
     <div class = "info">
-        <h1 class = "title">Chaotic Timetable</h1>
         <input type="text" placeholder="name" id="name">
         <input type="text" placeholder="description" id="description">
         <input type="date" placeholder="due" id="due">
-        <input type="button" id="submit" value="submit">
+        <input type="button" class="submit" value="submit">
+        <input type="button" class="submit float_1" value="submit">
+        <input type="button" class="submit float-right" value="submit">
+        <input type="button" class="submit .float-lg-right" value="submit">
     </div>
+    <div class="background-animation"></div>
+    <div class="float-md-left">Float left on viewports sized MD (medium) or wider</div><br>
 
     <script>
         function generateID() {
@@ -62,12 +67,30 @@
             }
         });
 
-        document.getElementById('submit').addEventListener('click', async () => {
-            // Data conversion
-
-            await fetch({});
-            location.replace('timetable.html')
-        })
+        document.addEventListener('DOMContentLoaded', () => {
+            var submit_buttons = document.getElementsByClassName("submit");
+            var time_of_click = 0;
+        
+            for (var i = 1; i < submit_buttons.length; i++) {
+                submit_buttons[i].style.display = "none";
+            }
+        
+            for (var i = 0; i < submit_buttons.length; i++) {
+                submit_buttons[i].addEventListener('click', async () => {
+                    if (time_of_click < submit_buttons.length - 1) {
+                        submit_buttons[time_of_click].style.display = "none";
+                        submit_buttons[time_of_click + 1].style.display = "block";
+                    }
+        
+                    if (time_of_click >= submit_buttons.length - 1) {
+                        // Data conversion
+                        await fetch({});
+                        location.replace('timetable.html');
+                    }
+                    time_of_click = time_of_click + 1;
+                });
+            }
+        });
     </script>
 </body>
 
