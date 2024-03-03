@@ -28,23 +28,83 @@ body {
       background-position: 0% 50%;
     }
   }
-  @keyframes moveBackground {
-    0% {
-        background-position: 0% 0%;
-    }
-    100% {
-        background-position: 100% 100%;
-    }
-}
 
-  .background-animation {
+.cat-animation1 {
+    position: fixed;
     top: 0;
     left: 0;
     width: 50%;
-    height: 30%;
+    height: 50%;
     background-image: url('maxwell1.png');
     background-size: cover;
-    animation: moveBackground 10s linear infinite; /* Change the duration and animation timing function as needed */
+    animation: moveCat1 2s ease-in-out infinite;
+}
+
+@keyframes moveCat1 {
+    0% {
+        transform: translate(-50%, 0%); 
+    }
+    25% {
+        transform: translate(0%, 100%);
+    }
+    50% {
+        transform: translate(100%, 0%);
+    }
+    75% {
+        transform: translate(100%, 150%); 
+    }
+    100%
+    {
+        transform: translate(150%, 200%);
+    }
+}
+
+.cat-animation2
+{
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    width: 25%;
+    height: 25%;
+    background-image: url('BUTTER.png');
+    background-size: cover;
+    animation: moveCat2 0.5s ease-in-out infinite;
+    
+}
+@keyframes moveCat2 {
+    0% {
+        transform: translate(200px, 200px);
+    }
+    50% {
+        transform: translate(25%, 25px);
+    }
+    100% {
+        transform: translate(200px, 200px);
+    }
+}
+
+.cat-animation3
+{
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-image: url('maxwell2.png');
+    background-size: cover;
+    animation: moveCat3 5s ease-in-out infinite;
+    
+}
+@keyframes moveCat3 {
+    0% {
+        transform: translate(100px, 100px);
+    }
+    50% {
+        transform: translate(50%, 50%);
+    }
+    100% {
+        transform: translate(-10%, -10%);
+    }
 }
 
 #newTask{
