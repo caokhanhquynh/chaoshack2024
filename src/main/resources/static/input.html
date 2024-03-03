@@ -25,75 +25,75 @@
     <div class="cat-animation3"> </div>
     <div class="float-md-left">Float left on viewports sized MD (medium) or wider</div><br>
 
-    <script>
-        function generateID() {
-            const CHARS = '1234567890QWERTYUIOPqwertyuiopASDFGHJKLasdfghjklZXCVBNMzxcvbnm+/'
-            let result = '';
-            for (let i = 0; i < 64; i++) {
-                result += CHARS[Math.floor(Math.random() * CHARS.length)];
-            }
-            return result;
+ <script>
+      function generateID() {
+        const CHARS =
+          "1234567890QWERTYUIOPqwertyuiopASDFGHJKLasdfghjklZXCVBNMzxcvbnm+/";
+        let result = "";
+        for (let i = 0; i < 64; i++) {
+          result += CHARS[Math.floor(Math.random() * CHARS.length)];
         }
-        let query = location.href.split('?')[1];
-        let params = {};
-        if (query) {
-            let stringParams = query.split('&');
-            stringParams.forEach(str => {
-                let pair = str.split('=');
-                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+        return result;
+      }
+      let query = location.href.split("?")[1];
+      let params = {};
+      if (query) {
+        let stringParams = query.split("&");
+        stringParams.forEach((str) => {
+          let pair = str.split("=");
+          params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+        });
+      }
+
+      let id;
+      let fetchData;
+      if (Object.keys(params).includes("id")) {
+        id = params["id"];
+        fetchData = true;
+      } else {
+        id = generateID();
+        fetchData = false;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        if (fetchData) {
+          fetch({}).then(async (response) => {
+            const FIELDS = ["name", "description", "due"];
+            let data = await response.json();
+
+            // Conversion
+
+            FIELDS.forEach((field) => {
+              document.getElementById(field).value = data[field];
             });
+          });
         }
+      });
 
-        let id;
-        let fetchData;
-        if (Object.keys(params).includes('id')) {
-            id = params['id'];
-            fetchData = true;
-        } else {
-            id = generateID();
-            fetchData = false;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (fetchData) {
-                fetch({}).then(async response => {
-                    const FIELDS = ['name', 'description', 'due']
-                    let data = await response.json();
-
-                    // Conversion
-
-                    FIELDS.forEach(field => {
-                        document.getElementById(field).value = data[field];
-                    })
-                });
-            }
+      document.getElementById("submit").addEventListener("click", async () => {
+        // Data conversion
+        const data = {
+          id: id,
+          name: document.getElementById("name").value,
+          description: document.getElementById("description").value,
+          due: document.getElementById("due").value,
+        };
+        await fetch(
+          "http://localhost:3000/add",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+          }
+        ).then((res) => {
+          console.log(res);
+          // res.redir
+          //   location.replace("timetable.html");
         });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            var submit_buttons = document.getElementsByClassName("submit");
-            var time_of_click = 0;
-        
-            for (var i = 1; i < submit_buttons.length; i++) {
-                submit_buttons[i].style.display = "none";
-            }
-        
-            for (var i = 0; i < submit_buttons.length; i++) {
-                submit_buttons[i].addEventListener('click', async () => {
-                    if (time_of_click < submit_buttons.length - 1) {
-                        submit_buttons[time_of_click].style.display = "none";
-                        submit_buttons[time_of_click + 1].style.display = "block";
-                    }
-        
-                    if (time_of_click >= submit_buttons.length - 1) {
-                        // Data conversion
-                        await fetch({});
-                        location.replace('timetable.html');
-                    }
-                    time_of_click = time_of_click + 1;
-                });
-            }
-        });
+      });
     </script>
-</body>
-
+  </body>
 </html>
+
